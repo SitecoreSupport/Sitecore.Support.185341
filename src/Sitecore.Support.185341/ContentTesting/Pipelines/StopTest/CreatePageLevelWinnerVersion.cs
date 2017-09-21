@@ -7,13 +7,16 @@
   {
     public override void Process(StopTestArgs args)
     {
-      //TODO: Pass into args winner ID
+
       Sitecore.Diagnostics.Assert.ArgumentNotNull(args, "args");
       Sitecore.Data.Items.Item latestVersionIgnoreTests = args.Configuration.ContentItem.GetLatestVersionIgnoreTests();
       Sitecore.Data.Items.Item winnerVersion = this.GetWinnerVersion(args.Configuration, args.Combination);
       Sitecore.Data.Items.Item item = latestVersionIgnoreTests.Versions.AddVersion();
       if (winnerVersion != null)
       {
+        #region AddedCode
+        args.CustomData.Add("winnerItem", winnerVersion);
+        #endregion
         using (new Sitecore.Data.Items.EditContext(item))
         {
           Sitecore.Data.Items.TemplateFieldItem[] fields = winnerVersion.Template.Fields;

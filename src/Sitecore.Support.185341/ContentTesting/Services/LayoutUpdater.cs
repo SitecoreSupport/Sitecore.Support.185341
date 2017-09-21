@@ -3,25 +3,28 @@
   using Data.Items;
   using Diagnostics;
 
-  public class LayoutUpdater <T> : Sitecore.ContentTesting.Services.LayoutUpdater<T>
+  public class LayoutUpdater<T> : Sitecore.ContentTesting.Services.LayoutUpdater<T>
   {
-    private Item _Item;
+    #region AddedCode
+    private Item _ItemToUpdate;
 
-    public LayoutUpdater(Item item) : base(item)
+    public LayoutUpdater(Item itemToUpdate, Item layoutSourceItem) : base(layoutSourceItem)
     {
-      Assert.ArgumentNotNull(item, "item");
-      _Item = item;
+      Assert.ArgumentNotNull(itemToUpdate, "itemToUpdate");
+      _ItemToUpdate = itemToUpdate;
     }
+    #endregion
 
     public new void UpdateLayout(UpdateLayoutMethod updateMethod, T parameters)
     {
-      //TODO: Take into account winner layout
       Assert.ArgumentNotNull(updateMethod, "updateMethod");
       string baseLayout = this.GetBaseLayout();
       string str2 = updateMethod(baseLayout, parameters);
       string finalLayout = this.GetFinalLayout(str2);
       string str4 = updateMethod(finalLayout, parameters);
-      ItemUtil.SetLayoutDetails(_Item, str2, str4);
+      #region Modified code
+      ItemUtil.SetLayoutDetails(_ItemToUpdate, str2, str4);
+      #endregion
     }
   }
 }
